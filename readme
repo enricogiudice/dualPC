@@ -1,8 +1,7 @@
-dualPC_sim.R contains an example run with the different PC versions
-it calls dualPC_algs.R which contains the individual runs
+dualPC.R contains the R code for the main functions.
 
-dualPC.R contains the R code
-DAGfns.R contains functions for generating data
+dualPC_sim.R contains an example run with the different PC versions;
+it calls dualPC_algs.R which contains the individual runs.
 
-the other files are helper files for running jobs on the cluster
-and collating the results from individual jobs
+DAGfns.R contains functions for generating data and comparing the results.
+
