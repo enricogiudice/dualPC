@@ -5,3 +5,5 @@ it calls dualPC_algs.R which contains the individual runs.
 
 DAGfns.R contains functions for generating data and comparing the results.
 
+sims_collated/ contains the collected data from the simulations;
+plots/ contains the generated plots and the code used to create them.
