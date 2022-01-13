@@ -244,7 +244,6 @@ orient_vstructures <- function(G, sepsets, pres_sepsets, solve.confl = FALSE,
 
 dual_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, pattern_graph = FALSE, max_ord = NULL) {
   n <- ncol(cor_mat) # number of variables
-  N <- nrow(data) # number of observations
   if (is.null(max_ord)) { # the maximum subset size to test
     max_ord <- n
   }
