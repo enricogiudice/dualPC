@@ -3,7 +3,7 @@ local_run <- FALSE
 # to run locally we need to set the seed and network size
 # this is done externally on the cluster runs
 write_data <- FALSE
-run_own <- TRUE #FALSE # whether to run our implementation of pc alg
+run_own <- FALSE # whether to run our implementation of pc alg
 
 if (local_run) {
   kk <- 1
@@ -17,6 +17,7 @@ exp_parents <- 2 # expected number of parents
 
 # range of thresholds
 pc_alphas <- c(0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25)
+ges_lambdas <- c(4, 5, 7, 10, 14, 19, 26, 36, 50)
 # how far to run each algorithm
 # first for pcalg versions
 # second for dual pc
