@@ -73,7 +73,6 @@ for (alpha in pc_alphas[1:levelly[2]]) {
 ## GES
 method_vec[1:2] <- c("GES", "lambda")
 print("GES")
-ges_lambdas <- c(4,5,7,10,14,19,26,36,50)
 for (lambda_scale in ges_lambdas) {
   method_vec[3] <- lambda_scale 
   # Start the clock!
