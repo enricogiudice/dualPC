@@ -36,7 +36,7 @@ results_df$value <- as.numeric(as.character(results_df$value))
 
 results_df$method <- factor(results_df$method, 
                             levels = c("dualPCst", "dualPCoi", "ownPCst", "ownPCoi",
-                                       "PCst", "PCoi", "precPCst", "precPCoi"))
+                                       "PCst", "PCoi", "precPCst", "precPCoi", "GES"))
 
 times_df <- all_times_df
 
@@ -44,7 +44,7 @@ times_df$time <- as.numeric(as.character(times_df$user.self))
 
 times_df$method <- factor(times_df$method, 
                             levels = c("dualPCst", "dualPCoi", "ownPCst", "ownPCoi", 
-                                       "PCst", "PCoi", "precPCst", "precPCoi"))
+                                       "PCst", "PCoi", "precPCst", "precPCoi", "GES"))
 
 
 library(tidyverse)
@@ -88,16 +88,16 @@ for (compy in c("cpdag", "pattern", "skeleton")){
 
 ggplot() + 
   geom_point(data = results_df %>% 
-               filter(comparison == compy, method %in% c("dualPCst", "dualPCoi", "PCst", "PCoi"))
+               filter(comparison == compy, method %in% c("dualPCst", "dualPCoi", "PCst", "PCoi", "GES"))
              , aes(x = FPRp, y = TPR, color=method), 
              alpha = 0.15, size = 0.5, shape = 20) + 
   geom_path(data = summarised_results_df %>% 
-                    filter(comparison == compy, method %in% c("dualPCst", "dualPCoi", "PCst", "PCoi"))
+                    filter(comparison == compy, method %in% c("dualPCst", "dualPCoi", "PCst", "PCoi", "GES"))
   , aes(x = FPRp, y = TPR, colour = method),
   size = 1) + facet_grid(k ~ n, labeller=labeller(k = add_facet_text2, n = add_facet_text)) + 
   coord_fixed(ratio = 1, xlim = c(0, 0.55), ylim = c(0.25, 1), expand = FALSE) + 
-  scale_color_discrete(labels = c("\ndual PC\n", "\ndual PC\nstable\n", "\nPC\n", "\nPC\nstable\n"),
-                       type = c("#6a3d9a","#1f78b4", "#e31a1c", "#ff7f00"))
+  scale_color_discrete(labels = c("\ndual PC\n", "\ndual PC\nstable\n", "\nPC\n", "\nPC\nstable\n", "\nGES\n"),
+                       type = c("#6a3d9a","#1f78b4", "#e31a1c", "#ff7f00", "#27a538"))
 
 ggsave(paste0(compy, "_ROC_parents_", exp_parents, ".pdf"), width=8, height=7)
 }
