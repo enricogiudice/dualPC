@@ -70,6 +70,26 @@ for (alpha in pc_alphas[1:levelly[2]]) {
   result_df <- compare_results(dualpc_cpdag, setup_vec, method_vec, result_df, trueCPDAG, trueskel, truepatt)
 }
 
+## GES
+method_vec[1:2] <- c("GES", "lambda")
+print("GES")
+ges_lambdas <- c(4,5,7,10,14,19,26,36,50)
+for (lambda_scale in ges_lambdas) {
+  method_vec[3] <- lambda_scale 
+  # Start the clock!
+  ptm <- proc.time()
+  ## estimate cpdag directly
+  ges_score <- new("GaussL0penIntScore", data, lambda = lambda_scale *log(nrow(data)))
+  ges_fit <- ges(ges_score)
+  # Stop the clock
+  GEStime <- (proc.time() - ptm)[1]
+  # Extract cpdag
+  gesCPDAG <- 1*as(ges_fit$essgraph, "matrix")
+  # Compare results to generating model
+  time_df <- rbind(time_df, data.frame(t(c(setup_vec, method_vec[-4], GEStime))))
+  result_df <- compare_results(gesCPDAG, setup_vec, method_vec, result_df, trueCPDAG, trueskel, truepatt)
+}
+
 if (run_own) { # run my own implementation of the pc algorithm, which is slower
 # own PC, order independent
 method_vec[1:2] <- c("ownPCoi", "alpha")
