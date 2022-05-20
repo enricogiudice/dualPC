@@ -7,10 +7,11 @@ wFUN <- function(m, lb, ub){ # function for edge weights
 }
 
 
-### This function generates Gaussian data from a DAG
-# following the topological order
+### This function generates data from a DAG following the topological order.
+# t_df is the number of degrees of freedom for the t-Student noise. 
+# Default is NULL (for Gaussian noise).
 
-rmvDAG <- function(trueDAGedges, N, standardise = TRUE) {
+rmvDAG <- function(trueDAGedges, N, standardise = TRUE, t_df = NULL) {
   trueDAG <- 1*(trueDAGedges != 0) # the edge presence in the DAG
   n <- ncol(trueDAG) # number of variables
   data <- matrix(0, nrow = N, ncol = n) # to store the simulated data
@@ -26,7 +27,12 @@ rmvDAG <- function(trueDAGedges, N, standardise = TRUE) {
       data[, jj] <- colSums(t(data[, parents])*trueDAGedges[parents, jj])
     }
     # add random noise
-    data[, jj] <- data[, jj] + rnorm(N)
+    if(is.null(t_df)) {  # Add Gaussian noise
+      data[, jj] <- data[, jj] + rnorm(N)
+    }
+    else {  # Add t-Student noise
+      data[, jj] <- data[, jj] + rt(N, t_df)
+    }
   }
   if(standardise) { # whether to standardise
     scale(data)
