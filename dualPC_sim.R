@@ -15,7 +15,7 @@ if (local_run) {
 n <- c(50, 100, 150, 200)[kk] # number of nodes
 N <- n*c(25, 50, 100)[jj] # number of observations
 exp_parents <- 2 # expected number of parents
-nu <- NULL # degrees of freedom of t_Student noise, NULL is Gaussian
+nu <- NULL # degrees of freedom of t-Student noise, NULL is Gaussian
 
 # range of thresholds
 pc_alphas <- c(0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25)
