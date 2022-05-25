@@ -4,6 +4,7 @@ local_run <- FALSE
 # this is done externally on the cluster runs
 write_data <- FALSE
 run_own <- FALSE # whether to run our implementation of pc alg
+add_ges <- FALSE # whether to add GES as a benchmark
 
 if (local_run) {
   kk <- 1
@@ -14,10 +15,11 @@ if (local_run) {
 n <- c(50, 100, 150, 200)[kk] # number of nodes
 N <- n*c(25, 50, 100)[jj] # number of observations
 exp_parents <- 2 # expected number of parents
+nu <- NULL # degrees of freedom of t_Student noise, NULL is Gaussian
 
 # range of thresholds
 pc_alphas <- c(0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25)
-ges_lambdas <- c(4, 5, 7, 10, 14, 19, 26, 36, 50)
+ges_lambdas <- c(5, 7, 10, 14, 20, 28, 40, 57, 80)
 # how far to run each algorithm
 # first for pcalg versions
 # second for dual pc
@@ -34,9 +36,14 @@ source("dualPC.R")
 # store values for later dataframe
 setup_vec <- c(n, N, exp_parents, seed_number)
 names(setup_vec) <- c("n", "N", "parents", "seed")
+if(!is.null(nu)) {
+  setup_vec <- append(setup_vec, nu, after = 3)
+  names(setup_vec)[4] <- "df"
+}
+
 # create a name for the directory to store stuff
 f_name <- paste(paste(names(setup_vec), setup_vec, sep = "_"), collapse = "_")
-subdir_name <- paste(paste(names(setup_vec[-4]), setup_vec[-4], sep = "_"), collapse = "_")
+subdir_name <- paste(paste(names(setup_vec[-length(setup_vec)]), setup_vec[-length(setup_vec)], sep = "_"), collapse = "_")
 dir_name <- paste("./sims", subdir_name, sep = "/")
 
 
@@ -83,4 +90,3 @@ if (!file.exists(paste0(dir_name, "/", f_name, ".Rdata"))) {
   
   save(result_df, time_df, file = paste0(dir_name, "/", f_name, ".Rdata"))
 }
-
