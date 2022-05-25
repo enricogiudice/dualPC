@@ -7,10 +7,16 @@ for (n in c(50, 100, 150, 200)) { # number of nodes
   for (k in c(25, 50, 100)){ # different simulation settings
     N <- n*k # number of observations
     exp_parents <- 2 # expected number of parents
-
+    nu <- NULL # degrees of freedom of t_Student noise, NULL is Gaussian
+    
 # store values for later dataframe
 setup_vec <- c(n, N, exp_parents)
 names(setup_vec) <- c("n", "N", "parents")
+if(!is.null(nu)) {
+  setup_vec <- c(setup_vec, nu)
+  names(setup_vec)[4] <- "df"
+}
+
 # create a name for the directory to store stuff
 subdir_name <- paste(paste(names(setup_vec), setup_vec, sep = "_"), collapse = "_")
 dir_name <- paste("./sims", subdir_name, sep = "/")
