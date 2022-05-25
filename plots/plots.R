@@ -1,3 +1,5 @@
+nu = NULL # degrees of freedom of t-Student noise, NULL is Gaussian
+
 for (exp_parents in c(1.5, 2)){ # expected number of parents
 
 times_combined_df <- NULL
@@ -14,6 +16,10 @@ for (jj in 1:3) {
   # store values for later dataframe
   setup_vec <- c(n, N, exp_parents)
   names(setup_vec) <- c("n", "N", "parents")
+  if(!is.null(nu)) {
+    setup_vec <- c(setup_vec, nu)
+    names(setup_vec)[4] <- "df"
+  }
   # create a name for the directory to store stuff
   subdir_name <- paste(paste(names(setup_vec), setup_vec, sep = "_"), collapse = "_")
   dir_name <- paste("../sims_collated", subdir_name, sep = "/")
