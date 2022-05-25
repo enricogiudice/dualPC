@@ -43,7 +43,8 @@ if(!is.null(nu)) {
 
 # create a name for the directory to store stuff
 f_name <- paste(paste(names(setup_vec), setup_vec, sep = "_"), collapse = "_")
-subdir_name <- paste(paste(names(setup_vec[-length(setup_vec)]), setup_vec[-length(setup_vec)], sep = "_"), collapse = "_")
+subdir_name <- paste(paste(names(setup_vec[-length(setup_vec)]), 
+                           setup_vec[-length(setup_vec)], sep = "_"), collapse = "_")
 dir_name <- paste("./sims", subdir_name, sep = "/")
 
 
