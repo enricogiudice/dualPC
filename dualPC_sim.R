@@ -60,7 +60,7 @@ truepatt <- pdag2pattern(trueCPDAG)
 
 set.seed(seed_number) # set seed
 # generate simulated data
-data <- rmvDAG(trueDAGedges, N)
+data <- rmvDAG(trueDAGedges, N, t_df = df)
 
 # create directory if none exists
 if (!dir.exists("./sims")) { 
