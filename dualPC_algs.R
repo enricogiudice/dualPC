@@ -70,6 +70,7 @@ for (alpha in pc_alphas[1:levelly[2]]) {
   result_df <- compare_results(dualpc_cpdag, setup_vec, method_vec, result_df, trueCPDAG, trueskel, truepatt)
 }
 
+if (add_ges) {
 ## GES
 method_vec[1:2] <- c("GES", "lambda")
 print("GES")
@@ -87,6 +88,7 @@ for (lambda_scale in ges_lambdas) {
   # Compare results to generating model
   time_df <- rbind(time_df, data.frame(t(c(setup_vec, method_vec[-4], GEStime))))
   result_df <- compare_results(gesCPDAG, setup_vec, method_vec, result_df, trueCPDAG, trueskel, truepatt)
+}
 }
 
 if (run_own) { # run my own implementation of the pc algorithm, which is slower
