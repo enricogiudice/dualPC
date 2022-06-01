@@ -1,14 +1,19 @@
 
+t_noise <- TRUE # whether we have Student-t noise
+
 ### range of seeds
 seed_numbers <- 100 + 1:100 # the seeds
 
 ### Settings
 for (n in c(50, 100, 150, 200)) { # number of nodes
-  for (k in c(25, 50, 100)){ # different simulation settings
-    N <- n*k # number of observations
+  for (k in 1:3){
+    N <- n*c(25, 50, 100)[k] # number of observations
     exp_parents <- 2 # expected number of parents
-    nu <- NULL # degrees of freedom of t_Student noise, NULL is Gaussian
-    
+    nu <- NULL # Gaussian case
+    if (t_noise) {
+      nu <- c(10, 5, 2)[k] # degrees of freedom of t_Student noise, NULL is Gaussian
+      N <- n*50
+    }
 # store values for later dataframe
 setup_vec <- c(n, N, exp_parents)
 names(setup_vec) <- c("n", "N", "parents")
