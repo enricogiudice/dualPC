@@ -4,7 +4,8 @@ local_run <- FALSE
 # this is done externally on the cluster runs
 write_data <- FALSE
 run_own <- FALSE # whether to run our implementation of pc alg
-add_ges <- FALSE # whether to add GES as a benchmark
+add_ges <- TRUE # whether to add GES as a benchmark
+t_noise <- FALSE # whether to add student t noise
 
 if (local_run) {
   kk <- 1
@@ -16,6 +17,11 @@ n <- c(50, 100, 150, 200)[kk] # number of nodes
 N <- n*c(25, 50, 100)[jj] # number of observations
 exp_parents <- 2 # expected number of parents
 nu <- NULL # degrees of freedom of t-Student noise, NULL is Gaussian
+
+if (t_noise) { 
+  nu <- c(10, 5, 2)[jj]
+  N <- n*50
+}
 
 # range of thresholds
 pc_alphas <- c(0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25)
@@ -60,7 +66,7 @@ truepatt <- pdag2pattern(trueCPDAG)
 
 set.seed(seed_number) # set seed
 # generate simulated data
-data <- rmvDAG(trueDAGedges, N, t_df = df)
+data <- rmvDAG(trueDAGedges, N, t_df = nu)
 
 # create directory if none exists
 if (!dir.exists("./sims")) { 
