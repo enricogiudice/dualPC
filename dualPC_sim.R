@@ -25,7 +25,7 @@ if (t_noise) {
 
 # range of thresholds
 pc_alphas <- c(0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25)
-ges_lambdas <- c(5, 7, 10, 14, 20, 28, 40, 57, 80)
+ges_lambdas <- c(5, 7, 10, 14, 20, 28, 40, 57, 80, 150)
 # how far to run each algorithm
 # first for pcalg versions
 # second for dual pc
