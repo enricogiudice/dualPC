@@ -1,5 +1,5 @@
 
-t_noise <- TRUE # whether we have Student-t noise
+t_noise <- FALSE # whether we have Student-t noise
 
 ### range of seeds
 seed_numbers <- 100 + 1:100 # the seeds
