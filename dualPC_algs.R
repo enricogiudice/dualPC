@@ -79,7 +79,7 @@ for (lambda_scale in ges_lambdas) {
   # Start the clock!
   ptm <- proc.time()
   ## estimate cpdag directly
-  ges_score <- new("GaussL0penIntScore", data, lambda = lambda_scale*log(nrow(data)))
+  ges_score <- new("GaussL0penObsScore", data, lambda = lambda_scale*log(nrow(data)))
   ges_fit <- ges(ges_score)
   # Stop the clock
   GEStime <- (proc.time() - ptm)[1]
