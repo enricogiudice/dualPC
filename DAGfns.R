@@ -41,6 +41,19 @@ rmvDAG <- function(trueDAGedges, N, standardise = TRUE, t_df = NULL) {
   }
 }
 
+### This function puts data through a sigmoid function
+Sig_data <- function(data, sig_scale) {
+  if (sig_scale > 0) {
+    data <- scale(tanh(sig_scale*t(t(data) + rnorm(ncol(data))))) #shift by random amount
+  }
+  data
+}
+
+### This function maps data to a Gaussian for each column
+Gau_data <- function(data) {
+  qnorm(apply(data, 2, rank)/(nrow(data) + 1))
+}
+
 ### This function extracts the skeleton from a graph
 Gskel <- function(incidence) {
   1*(incidence|t(incidence))

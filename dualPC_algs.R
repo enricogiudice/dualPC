@@ -47,7 +47,7 @@ for (alpha in pc_alphas[1:levelly[2]]) {
   method_vec[3] <- alpha
   # Start the clock!
   ptm <- proc.time()
-  dualpc_cpdag <- dual_pc(cor_mat, nrow(data), alpha)
+  dualpc_cpdag <- dual_pc(cor_mat, nrow(data), alpha, exact = exact, min_ESS = min_ESS)
   # Stop the clock
   dualPCtime <- (proc.time() - ptm)[1]
   # Compare results to generating model
@@ -62,7 +62,7 @@ for (alpha in pc_alphas[1:levelly[2]]) {
   method_vec[3] <- alpha
   # Start the clock!
   ptm <- proc.time()
-  dualpc_cpdag <- dual_pc(cor_mat, nrow(data), alpha, ord_ind = FALSE)
+  dualpc_cpdag <- dual_pc(cor_mat, nrow(data), alpha, ord_ind = FALSE, exact = exact, min_ESS = min_ESS)
   # Stop the clock
   dualPCtime <- (proc.time() - ptm)[1]
   # Compare results to generating model
@@ -99,7 +99,7 @@ for (alpha in pc_alphas[1:levelly[1]]) {
   method_vec[3] <- alpha
   # Start the clock!
   ptm <- proc.time()
-  ownpc_cpdag <- own_pc(cor_mat, nrow(data), alpha)
+  ownpc_cpdag <- own_pc(cor_mat, nrow(data), alpha, exact = exact)
   # Stop the clock
   ownPCtime <- (proc.time() - ptm)[1]
   # Compare results to generating model
@@ -114,7 +114,7 @@ for (alpha in pc_alphas[1:levelly[1]]) {
   method_vec[3] <- alpha
   # Start the clock!
   ptm <- proc.time()
-  ownpc_cpdag <- own_pc(cor_mat, nrow(data), alpha, ord_ind = FALSE)
+  ownpc_cpdag <- own_pc(cor_mat, nrow(data), alpha, ord_ind = FALSE, exact = exact)
   # Stop the clock
   ownPCtime <- (proc.time() - ptm)[1]
   # Compare results to generating model
@@ -123,6 +123,7 @@ for (alpha in pc_alphas[1:levelly[1]]) {
 }
 }
 
+if (run_prec) { # run PC also using the precision matrix
 # PC with pre matrix, order independent
 method_vec[1:2] <- c("precPCoi", "alpha")
 print("precision PC order independent")
@@ -151,4 +152,5 @@ for (alpha in pc_alphas[1:levelly[3]]) {
   # Compare results to generating model
   time_df <- rbind(time_df, data.frame(t(c(setup_vec, method_vec[-4], ownPCtime))))
   result_df <- compare_results(ownpc_cpdag, setup_vec, method_vec, result_df, trueCPDAG, trueskel, truepatt)
+}
 }

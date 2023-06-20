@@ -36,9 +36,14 @@ nextSubS <- function(SubS, max) {
 }
 
 # This function performs the Fisher z-test for conditional independence
-Fztest <- function(x, Nmk, T_star) {
-  T <- abs(sqrt(Nmk - 3) * 0.5 * pcalg:::log.q1pm(x))
-  (T > T_star)
+Fztest <- function(x, Nmk, T_star, exact = FALSE) {
+  if (exact) { # use t-test
+    T <- sqrt((Nmk-2)*x^2/(1-x^2)) # absolute value of t
+    (T >  qt(pnorm(T_star), Nmk-2)) # map z-score cutoff for comparison
+  } else { # use Fisher z-approximation
+    T <- abs(sqrt(Nmk - 3) * 0.5 * pcalg:::log.q1pm(x))
+    (T > T_star)
+  }
 }
 
 # This function finds the nodes connected to x
@@ -242,7 +247,7 @@ orient_vstructures <- function(G, sepsets, pres_sepsets, solve.confl = FALSE,
 }
 
 
-dual_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, pattern_graph = FALSE, max_ord = NULL) {
+dual_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, pattern_graph = FALSE, exact = FALSE, max_ord = NULL, min_ESS = 3) {
   n <- ncol(cor_mat) # number of variables
   if (is.null(max_ord)) { # the maximum subset size to test
     max_ord <- n
@@ -258,11 +263,16 @@ dual_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, pattern
   ord <- 0 # size of conditioning sets, 0th level is correlation/precision matrix
   # T statistics on correlation space
   # keep edges which are significant, ie delete those which aren't
-  Gc_0 <- Fztest(cor_mat*upper.tri(c_mat), N, T_c)
-  # precision matrix
-  p_mat <- psolve(c_mat)
-  # T statistics on precision space
-  Gp_0 <- Fztest(p_mat*upper.tri(p_mat), N-n, T_p)
+  Gc_0 <- Fztest(cor_mat*upper.tri(c_mat), N, T_c, exact)
+  # if effective sample size is large enough to test precision matrix
+  if (is.null(min_ESS) || (N-n-1 >= min_ESS)) {
+    # precision matrix
+    p_mat <- psolve(c_mat)
+    # T statistics on precision space
+    Gp_0 <- Fztest(p_mat*upper.tri(p_mat), N-n+2, T_p, exact)
+  } else {
+    Gp_0 <- matrix(1, n, n) # dummy matrix
+  }
   # keep track of sepsets of precision matrix
   pres_sepsets <- Gp_0 | t(Gp_0)
   # combined 
@@ -291,7 +301,11 @@ dual_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, pattern
         c_mat <- cor_mat[c(x, y, S), c(x, y, S)] # local correlation matrix
         p_mat <- psolve(c_mat) # local precision matrix
         # test current subset S
-        test_flag <- Fztest(p_mat[1, 2], N-nbhd_size, T_p)
+        if (is.null(min_ESS) || (N-nbhd_size-3 >= min_ESS)) {
+          test_flag <- Fztest(p_mat[1, 2], N-nbhd_size, T_p, exact)
+        } else {
+          test_flag <- TRUE # we didn't test so we didn't reject
+        }
         if (ord == nbhd_size) {
           n_subsets <- 0 # nothing else to test
         } else {
@@ -314,19 +328,21 @@ dual_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, pattern
           if (ord <= nbhd_size/2) {
             # normal test
             rho <- Compute_rho(c_mat[c(1, 2, cond_set), c(1, 2, cond_set)])
-            test_flag <- Fztest(rho, N-ord, T_c)
+            test_flag <- Fztest(rho, N-ord, T_c, exact)
           } else {
             # normal test, but use dual space to compute more efficiently
             rho <- Compute_rho(p_mat[c(1, 2, cond_set), c(1, 2, cond_set)])
-            test_flag <- Fztest(rho, N-ord, T_c)
+            test_flag <- Fztest(rho, N-ord, T_c, exact)
           }
           if (skeleton == FALSE && test_flag == FALSE) {  # record separating subset
             sepsets[[x, y]] <- sepsets[[y, x]] <- S[subset]
           }
           if (ord < nbhd_size/2 && test_flag == TRUE) {
             # dual test as well
-            rho <- Compute_rho(p_mat[c(1, 2, cond_set), c(1, 2, cond_set)])
-            test_flag <- Fztest(rho, N-nbhd_size+ord, T_p)
+            if (is.null(min_ESS) || (N--nbhd_size+ord-3 >= min_ESS)) {
+              rho <- Compute_rho(p_mat[c(1, 2, cond_set), c(1, 2, cond_set)])
+              test_flag <- Fztest(rho, N-nbhd_size+ord, T_p, exact)
+            }
           }
           if (skeleton == FALSE && test_flag == FALSE) {  # record separating subset
             sepsets[[x, y]] <- sepsets[[y, x]] <- S[-subset]
@@ -359,7 +375,7 @@ dual_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, pattern
 }
 
 
-own_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, prec = FALSE, max_ord = NULL) {
+own_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, prec = FALSE, exact = FALSE, max_ord = NULL) {
   n <- ncol(cor_mat) # number of variables
   N <- nrow(data) # number of observations
   if (is.null(max_ord)) { # the maximum subset size to test
@@ -370,14 +386,14 @@ own_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, prec = F
   ord <- 0 # first level is correlation/precision matrix
   # T statistics on correlation space
   # keep edges which are significant, ie delete those which aren't
-  Gc_0 <- Fztest(cor_mat*upper.tri(c_mat), N, T_c)
+  Gc_0 <- Fztest(cor_mat*upper.tri(c_mat), N, T_c, exact)
   G_cur <- 1*(Gc_0 | t(Gc_0)) # current graph
   pres_sepsets <- matrix(T, ncol = n, nrow = n)
   if (prec) { # also look at precision matrix
     # precision matrix
     p_mat <- psolve(c_mat)
     # T statistics on precision space
-    Gp_0 <- Fztest(p_mat*upper.tri(p_mat), N-n, T_c)
+    Gp_0 <- Fztest(p_mat*upper.tri(p_mat), N-n, T_c, exact)
     # keep track of sepsets of precision matrix
     pres_sepsets <- Gp_0 | t(Gp_0)
     # combined 
@@ -418,7 +434,7 @@ own_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, prec = F
           cond_set <- subset + 2 # which rows/columns to condition on
           # normal test
           rho <- Compute_rho(c_mat[c(1, 2, cond_set), c(1, 2, cond_set)])
-          if (Fztest(rho, N-ord, T_c) == 0) { # delete edge
+          if (Fztest(rho, N-ord, T_c, exact) == 0) { # delete edge
             test_flag <- TRUE
             if (ord_ind) { # we only delete at the end of each main loop
               del_mat[x, y] <- 0
