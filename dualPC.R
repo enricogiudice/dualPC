@@ -286,7 +286,7 @@ dual_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, pattern
     sepsets <- as.list(rep(NA, n*n))
     dim(sepsets) <- c(n, n) # this will record separating sets
   }
-  done_flag <- FALSE # track when we have performed all tests needed
+  done_flag <- ifelse(sum(G_cur) == 0, TRUE, FALSE) # track when we have performed all tests needed
   while (ord < max_ord && done_flag == FALSE) { # keep track of order
     done_flag <- TRUE
     ord <- ord + 1
