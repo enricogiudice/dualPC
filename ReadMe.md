@@ -14,7 +14,7 @@ require(datasets)
 source("dualPC.R")
 cor_mat <- cor(trees)
 N <- nrow(trees)
-dual_pc(cor_mat, N, 0.05)
+dual_pc(cor_mat, N, alpha = 0.05)
 ```
 Reference
 ---------
