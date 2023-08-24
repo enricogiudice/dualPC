@@ -3,7 +3,7 @@ This repository contains all the code to reproduce the results in [The dual PC a
 - dualPC.R contains the R code for the main functions.
 - dualPC_sim.R contains an example run with the different PC versions; it calls dualPC_algs.R which contains the individual runs.
 - DAGfns.R contains functions for generating data and comparing the results.
-- sims_collated/ contains the collected data from the simulations;
+- sims_collated/ contains the collected data from the simulations.
 - plots/ contains the generated plots and the code used to create them.
 
 Example
