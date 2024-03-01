@@ -20,14 +20,15 @@ Reference
 ---------
 
 ```
-@article{GIUDICE2023108975,
-title = {The dual PC algorithm and the role of Gaussianity for structure learning of Bayesian networks},
-journal = {International Journal of Approximate Reasoning},
-volume = {161},
-pages = {108975},
-year = {2023},
-doi = {https://doi.org/10.1016/j.ijar.2023.108975},
-url = {https://www.sciencedirect.com/science/article/pii/S0888613X23001068},
-author = {Enrico Giudice and Jack Kuipers and Giusi Moffa}
+@inproceedings{NEURIPS2023_b146e7c8,
+ author = {Giudice, Enrico and Kuipers, Jack and Moffa, Giusi},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {A. Oh and T. Neumann and A. Globerson and K. Saenko and M. Hardt and S. Levine},
+ pages = {56602--56614},
+ publisher = {Curran Associates, Inc.},
+ title = {A Bayesian Take on Gaussian Process Networks},
+ url = {https://proceedings.neurips.cc/paper_files/paper/2023/file/b146e7c87685fa208bd95ce4b08e330c-Paper-Conference.pdf},
+ volume = {36},
+ year = {2023}
 }
 ```
