@@ -21,14 +21,14 @@ Reference
 
 ```
 @article{GIUDICE2023108975,
-title = {The dual PC algorithm and the role of Gaussianity for structure learning of Bayesian networks},
-journal = {International Journal of Approximate Reasoning},
-volume = {161},
-pages = {108975},
-year = {2023},
-issn = {0888-613X},
-doi = {https://doi.org/10.1016/j.ijar.2023.108975},
-url = {https://www.sciencedirect.com/science/article/pii/S0888613X23001068},
-author = {Enrico Giudice and Jack Kuipers and Giusi Moffa}
+  title = {The dual PC algorithm and the role of Gaussianity for structure learning of Bayesian networks},
+  journal = {International Journal of Approximate Reasoning},
+  volume = {161},
+  pages = {108975},
+  year = {2023},
+  issn = {0888-613X},
+  doi = {https://doi.org/10.1016/j.ijar.2023.108975},
+  url = {https://www.sciencedirect.com/science/article/pii/S0888613X23001068},
+  author = {Enrico Giudice and Jack Kuipers and Giusi Moffa}
 }
 ```
